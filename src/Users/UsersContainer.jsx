@@ -11,6 +11,27 @@ class UsersContainer extends React.PureComponent {
     getListOfUsersFn()
   }
 
+  handleClipBoardFn = () => {
+    const elementTable = document.getElementById('usersTable')
+    let range, sel
+    if (document.createRange && window.getSelection) {
+      range = document.createRange()
+      sel = window.getSelection()
+      sel.removeAllRanges()
+
+      try {
+        range.selectNodeContents(elementTable)
+        sel.addRange(range)
+      } catch (e) {
+        range.selectNode(elementTable)
+        sel.addRange(range)
+      }
+
+      document.execCommand('copy')
+      sel.removeAllRanges()
+    }
+  }
+
   render() {
     const { isLoading, listOfUsers } = this.props
     if (isLoading || listOfUsers === undefined) {
@@ -21,7 +42,7 @@ class UsersContainer extends React.PureComponent {
       )
     }
 
-    return <UsersComponent listOfUsers={listOfUsers} />
+    return <UsersComponent listOfUsers={listOfUsers} handleClipBoardFn={this.handleClipBoardFn} />
   }
 }
 
