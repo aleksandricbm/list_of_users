@@ -12,8 +12,8 @@ class UsersContainer extends React.PureComponent {
   }
 
   render() {
-    const { isLoading } = this.props
-    if (isLoading) {
+    const { isLoading, listOfUsers } = this.props
+    if (isLoading || listOfUsers === undefined) {
       return (
         <div className="d-flex justify-content-center">
           <LoaderComponent />
@@ -21,13 +21,14 @@ class UsersContainer extends React.PureComponent {
       )
     }
 
-    return <UsersComponent />
+    return <UsersComponent listOfUsers={listOfUsers} />
   }
 }
 
 const mapStateToProps = state => {
   return {
     isLoading: state.users.isLoading,
+    listOfUsers: state.users.list,
   }
 }
 
@@ -35,6 +36,12 @@ const mapDispatchToProps = dispatch => {
   return {
     getListOfUsersFn: () => dispatch(getListOfUsers()),
   }
+}
+
+UsersContainer.propTypes = {
+  getListOfUsersFn: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  listOfUsers: PropTypes.arrayOf(PropTypes.shape({})),
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UsersContainer)
